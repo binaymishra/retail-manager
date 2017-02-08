@@ -1,8 +1,13 @@
 package com.manager.retail;
 
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 
@@ -12,11 +17,10 @@ import javax.annotation.PreDestroy;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import com.manager.retail.component.GoogleMapComponent;
 import com.manager.retail.domain.Shop;
-import com.manager.retail.domain.ShopAddress;
 import com.manager.retail.model.Location;
 
 
@@ -47,13 +51,10 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 
 	@Override
 	public void createShop(Shop shop) {
-		ShopAddress shopAddress = shop.getShopAddress();
-		Assert.notNull(shopAddress, String.format("shopAddress = %s can not be null.", shopAddress));
-		
 		Location location = null;
 		long startTime = System.currentTimeMillis();
 		try {
-			location = googleMapComponent.findLatitudeAndLongitude(shopAddress);
+			location = googleMapComponent.findLatitudeAndLongitude(shop);
 			if(LOG.isInfoEnabled())
 				LOG.info("Calling google Geocode service, time elapsed = " + (System.currentTimeMillis() - startTime) + " ms.");
 		} catch (InterruptedException | ExecutionException e) {
@@ -64,14 +65,68 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 		shop.setShopLatitude(location.getLatitude());
 		shop.setShopLongitude(location.getLongitude());
 		
-		LOG.info(shop);
-		
 		shops.add(shop);
 		
 		if(LOG.isInfoEnabled())
 			LOG.info("shop list size = "+shops.size());
 	}
+
+	@Override
+	public List<Shop> findNearestShops(BigDecimal customerLongitude, BigDecimal customerLatitude) {
+		final ArrayList<Shop> shops = new ArrayList<>(this.shops);
+		Map<Double, Shop> shopMap = new TreeMap<>();
+		if(!CollectionUtils.isEmpty(shops)){
+			for(Shop shop : shops){
+				final double distanceInKm = findDistanceInKm(
+							customerLatitude.doubleValue(),
+							customerLongitude.doubleValue(), 
+							shop.getShopLatitude().doubleValue(),
+							shop.getShopLongitude().doubleValue()
+						);
+				shopMap.put(distanceInKm, shop);
+			}
+		}
+		for(Map.Entry<Double, Shop> entry : shopMap.entrySet()){
+			System.out.println(entry.getValue().getShopName() +  " --> distance from New Town Bus Stop = "+entry.getKey());
+		}
+		return new ArrayList<>(shopMap.values());
+	}
 	
+	/**
+	 * @param customerLatitude
+	 * @param customerLongitude
+	 * @param shopLatitude
+	 * @param shopLongitude
+	 * @return
+	 */
+	private static double findDistanceInKm(double customerLatitude, double customerLongitude, double shopLatitude, double shopLongitude){
+		double theta = customerLongitude - shopLongitude;
+		
+		double distance = Math.sin(convertDegreeToRadian(customerLatitude)) * Math.sin(convertDegreeToRadian(shopLatitude)) 
+						+ Math.cos(convertDegreeToRadian(customerLatitude)) * Math.cos(convertDegreeToRadian(shopLatitude)) 
+						* Math.cos(convertDegreeToRadian(theta));
+		
+		distance = Math.acos(distance);
+		distance = convertRadianToDegree(distance);
+		distance = distance * 60 * 1.1515;
+		distance = distance * 1.609344; //in KM
+		return distance;
+	}
 	
+	/**
+	 * @param degree
+	 * @return
+	 */
+	private static double convertDegreeToRadian(double degree) {
+		return (degree * Math.PI / 180.0);
+	}
+	
+	/**
+	 * @param radian
+	 * @return
+	 */
+	private static double convertRadianToDegree(double radian) {
+		return (radian * 180 / Math.PI);
+	}
 
 }

@@ -1,13 +1,17 @@
 package com.manager.retail;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.manager.retail.domain.Shop;
@@ -36,6 +40,26 @@ public class ShopController {
 		
 		retailsShopService.createShop(shop);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	/**
+	 * @param customerLongitude
+	 * @param customerLatitude
+	 * @return
+	 */
+	@GetMapping("/shops")
+	public ResponseEntity<List<Shop>> findNearestShops(
+			@RequestParam("customerLongitude") BigDecimal customerLongitude, 
+			@RequestParam("customerLatitude")  BigDecimal customerLatitude){
+		
+		if(customerLongitude == null || customerLatitude == null)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		
+		List<Shop> nearestShops = retailsShopService.findNearestShops(customerLongitude, customerLatitude);
+		if(nearestShops.isEmpty())
+			return ResponseEntity.notFound().build();
+		
+		return ResponseEntity.ok(nearestShops);
 	}
 
 	/**
