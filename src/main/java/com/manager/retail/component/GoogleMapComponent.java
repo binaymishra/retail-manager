@@ -11,6 +11,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.manager.retail.domain.Shop;
 import com.manager.retail.domain.ShopAddress;
 import com.manager.retail.model.GoogleMapResponse;
 import com.manager.retail.model.Location;
@@ -36,14 +37,13 @@ public class GoogleMapComponent {
 	String baseUrl;
 	
 
-	public Location findLatitudeAndLongitude(ShopAddress shopAddress) throws InterruptedException, ExecutionException{
-		//RestTemplate restTemplate = new RestTemplate();
+	public Location findLatitudeAndLongitude(Shop shop) throws InterruptedException, ExecutionException{
 		
 		final GoogleMapResponse response = taskExecutor.submit(new Callable<GoogleMapResponse>() {
 
 			@Override
 			public GoogleMapResponse call() throws Exception {
-				return restTemplate.getForObject(generateUrl(shopAddress), GoogleMapResponse.class);
+				return restTemplate.getForObject(generateUrl(shop), GoogleMapResponse.class);
 			}
 		}).get();
 		
@@ -68,8 +68,10 @@ public class GoogleMapComponent {
 	 * @param shopAddress
 	 * @return
 	 */
-	private String generateUrl(ShopAddress shopAddress){
-		String url = baseUrl+"?address="+shopAddress.getPostCode()+"&key=AIzaSyAelw4voJokY89NBhPX1NPus5_nQujT-bQ";
+	private String generateUrl(Shop shop){
+		String shopName = shop.getShopName();
+		ShopAddress shopAddress = shop.getShopAddress();
+		String url = String.format(baseUrl+"?address=%s,%s&key=%s", shopName, shopAddress.getPostCode(), apiKey);
 		if(LOG.isInfoEnabled())
 			LOG.info("Geocode URL : "+url);
 		return url;
