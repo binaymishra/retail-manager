@@ -25,7 +25,7 @@ import com.manager.retail.domain.ShopAddress;
 @SpringBootTest
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
-public class RetailManagerApplicationTests {
+public class ShopControllerTests {
 	
 	@Autowired
     private MockMvc mvc;
