@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutionException;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -21,7 +20,6 @@ import org.springframework.util.CollectionUtils;
 
 import com.manager.retail.component.GoogleMapComponent;
 import com.manager.retail.domain.Shop;
-import com.manager.retail.model.Location;
 
 
 /**
@@ -51,22 +49,8 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 
 	@Override
 	public void createShop(Shop shop) {
-		Location location = null;
-		long startTime = System.currentTimeMillis();
-		try {
-			location = googleMapComponent.findLatitudeAndLongitude(shop);
-			if(LOG.isInfoEnabled())
-				LOG.info("Calling google Geocode service, time elapsed = " + (System.currentTimeMillis() - startTime) + " ms.");
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(String.format(" and exception thrown by method [GoogleMapComponent#findLatitudeAndLongitude()], caused by %s. ", e.getMessage()), e);
-		}
-		
-		//Updating Latitude and Longitude from google's Geocoding API
-		shop.setShopLatitude(location.getLatitude());
-		shop.setShopLongitude(location.getLongitude());
-		
+		googleMapComponent.updateLatitudeAndLongitude(shop);
 		shops.add(shop);
-		
 		if(LOG.isInfoEnabled())
 			LOG.info("shop list size = "+shops.size());
 	}
