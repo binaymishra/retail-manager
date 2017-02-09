@@ -52,8 +52,9 @@ public class ShopController {
 			@RequestParam("customerLongitude") BigDecimal customerLongitude, 
 			@RequestParam("customerLatitude")  BigDecimal customerLatitude){
 		
+		//In case of(customerLongitude, customerLatitude) is missing or NULL.
 		if(customerLongitude == null || customerLatitude == null)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		
 		List<Shop> nearestShops = retailsShopService.findNearestShops(customerLongitude, customerLatitude);
 		if(nearestShops.isEmpty())
