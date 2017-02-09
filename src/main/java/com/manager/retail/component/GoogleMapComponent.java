@@ -1,8 +1,7 @@
 package com.manager.retail.component;
 
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.math.BigDecimal;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 import com.manager.retail.domain.Shop;
-import com.manager.retail.domain.ShopAddress;
-import com.manager.retail.model.GoogleMapResponse;
-import com.manager.retail.model.Location;
-import com.manager.retail.model.LocationDetails;
 
 @Component("GoogleMapComponent")
 public class GoogleMapComponent {
@@ -28,6 +26,9 @@ public class GoogleMapComponent {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@Autowired
+	GeoApiContext geoApiContext;
+	
 	
 	@Value("${api.key}")  //AIzaSyAelw4voJokY89NBhPX1NPus5_nQujT-bQ
 	String apiKey;
@@ -37,44 +38,23 @@ public class GoogleMapComponent {
 	String baseUrl;
 	
 
-	public Location findLatitudeAndLongitude(Shop shop) throws InterruptedException, ExecutionException{
-		
-		final GoogleMapResponse response = taskExecutor.submit(new Callable<GoogleMapResponse>() {
+	public void updateLatitudeAndLongitude(final Shop shop){
+		geoApiContext.setApiKey(apiKey);
+		String shopAddress = String.format("%s,%s", shop.getShopName(), shop.getShopAddress().getPostCode());
+		try {
+			long startTime = System.currentTimeMillis();
+			GeocodingResult[] results = GeocodingApi.geocode(geoApiContext, shopAddress).await();
 
-			@Override
-			public GoogleMapResponse call() throws Exception {
-				return restTemplate.getForObject(generateUrl(shop), GoogleMapResponse.class);
-			}
-		}).get();
-		
-		return getLocation(response);
-	}
-	
-	
-	/**
-	 * Keys { latitude, longitude }
-	 * @param response
-	 * @return
-	 */
-	private Location getLocation(GoogleMapResponse response){
-		LocationDetails locationDetails = response.getResults().get(0);
-		Location location = locationDetails.getGeometry().getLocation();
-		if(LOG.isInfoEnabled())
-			LOG.info(location);
-		return location; 
-	}
-	
-	/**
-	 * @param shopAddress
-	 * @return
-	 */
-	private String generateUrl(Shop shop){
-		String shopName = shop.getShopName();
-		ShopAddress shopAddress = shop.getShopAddress();
-		String url = String.format(baseUrl+"?address=%s,%s&key=%s", shopName, shopAddress.getPostCode(), apiKey);
-		if(LOG.isInfoEnabled())
-			LOG.info("Geocode URL : "+url);
-		return url;
+			if(LOG.isInfoEnabled())
+				LOG.info("Calling google Geocode service, time elapsed = " + (System.currentTimeMillis() - startTime) + " ms.");
+			double lat = results[0].geometry.location.lat;
+			double lng = results[0].geometry.location.lng;
+			
+			shop.setShopLatitude(BigDecimal.valueOf(lat));
+			shop.setShopLongitude(BigDecimal.valueOf(lng));
+		} catch (Exception e) {
+			throw new RuntimeException(String.format(" and exception thrown by method [GoogleMapComponent#findLatitudeAndLongitude()], caused by %s. ", e.getMessage()), e);
+		}
 	}
 	
 }
