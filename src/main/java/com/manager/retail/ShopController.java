@@ -48,7 +48,7 @@ public class ShopController {
 	 * @return
 	 */
 	@GetMapping("/shops")
-	public ResponseEntity<List<Shop>> findNearestShops(
+	public ResponseEntity<Shop> findNearestShop(
 			@RequestParam("customerLongitude") BigDecimal customerLongitude, 
 			@RequestParam("customerLatitude")  BigDecimal customerLatitude){
 		
@@ -59,7 +59,7 @@ public class ShopController {
 		if(nearestShops.isEmpty())
 			return ResponseEntity.notFound().build();
 		
-		return ResponseEntity.ok(nearestShops);
+		return ResponseEntity.ok(nearestShops.get(0));
 	}
 
 	/**
