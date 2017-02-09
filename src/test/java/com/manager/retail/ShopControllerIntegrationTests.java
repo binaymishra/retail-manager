@@ -76,5 +76,19 @@ public class ShopControllerIntegrationTests {
         assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
     
+    @Test
+    public void addShopOk() throws Exception{
+    	Shop shop = new Shop("Home Town", new ShopAddress(1600, 700156));
+		shop.setShopLatitude(BigDecimal.valueOf(22.5818985));
+		shop.setShopLongitude(BigDecimal.valueOf(88.4529769));
+    	ResponseEntity<Void> response = template.postForEntity(base.toString()+"/shops", shop, Void.class);
+    	assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+    }
+    
+    @Test
+    public void addShopBadRequest() throws Exception{
+    	ResponseEntity<Void> response = template.postForEntity(base.toString()+"/shops", null, Void.class);
+    	assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
+    }
 
 }
