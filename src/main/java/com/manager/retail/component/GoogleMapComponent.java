@@ -47,7 +47,7 @@ public class GoogleMapComponent {
 			shop.setShopLatitude(BigDecimal.valueOf(lat));
 			shop.setShopLongitude(BigDecimal.valueOf(lng));
 		} catch (Exception e) {
-			throw new RuntimeException(String.format(" and exception thrown by method [GoogleMapComponent#findLatitudeAndLongitude()], caused by %s. ", e.getMessage()), e);
+			throw new RuntimeException(String.format(" an exception occurred while calling 'google Geocode service', caused by %s. ", e.getMessage()), e);
 		}
 	}
 	
