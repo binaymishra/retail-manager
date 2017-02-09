@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.maps.GeoApiContext;
+
 @EnableAsync
 @SpringBootApplication
 public class RetailManagerApplication {
@@ -23,6 +25,11 @@ public class RetailManagerApplication {
 	@Bean 
 	public RestTemplate restTemplate(){
 		return new RestTemplate();
+	}
+	
+	@Bean
+	public GeoApiContext getGeoApiContext(){
+		return new GeoApiContext();
 	}
 
 	public static void main(String[] args) {
