@@ -6,9 +6,7 @@ import java.math.BigDecimal;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
@@ -19,12 +17,6 @@ import com.manager.retail.domain.Shop;
 public class GoogleMapComponent {
 	
 	private static final Logger LOG = Logger.getLogger(GoogleMapComponent.class);
-	
-	@Autowired
-	ThreadPoolTaskExecutor taskExecutor;
-	
-	@Autowired
-	RestTemplate restTemplate;
 	
 	@Autowired
 	GeoApiContext geoApiContext;
