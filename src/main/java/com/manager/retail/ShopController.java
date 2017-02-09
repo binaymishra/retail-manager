@@ -54,7 +54,7 @@ public class ShopController {
 		
 		//In case of(customerLongitude, customerLatitude) is missing or NULL.
 		if(customerLongitude == null || customerLatitude == null)
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		
 		List<Shop> nearestShops = retailsShopService.findNearestShops(customerLongitude, customerLatitude);
 		if(nearestShops.isEmpty())
