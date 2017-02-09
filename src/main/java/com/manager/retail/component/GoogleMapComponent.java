@@ -29,14 +29,8 @@ public class GoogleMapComponent {
 	@Autowired
 	GeoApiContext geoApiContext;
 	
-	
-	@Value("${api.key}")  //AIzaSyAelw4voJokY89NBhPX1NPus5_nQujT-bQ
+	@Value("${api.key}")
 	String apiKey;
-	
-	
-	@Value("${google.map.baseUrl}")  //https://maps.googleapis.com/maps/api/geocode/json
-	String baseUrl;
-	
 
 	public void updateLatitudeAndLongitude(final Shop shop){
 		geoApiContext.setApiKey(apiKey);
