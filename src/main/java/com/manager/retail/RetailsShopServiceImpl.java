@@ -70,10 +70,9 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 				shopMap.put(distanceInKm, shop);
 			}
 		}
-		for(Map.Entry<Double, Shop> entry : shopMap.entrySet()){
-			System.out.println(entry.getValue().getShopName() +  " --> distance from New Town Bus Stop = "+entry.getKey());
-		}
-		return new ArrayList<>(shopMap.values());
+		shops.clear();
+		shops.addAll(shopMap.values());
+		return shops;
 	}
 	
 	/**
