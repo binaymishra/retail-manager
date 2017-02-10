@@ -1,6 +1,7 @@
 package com.manager.retail;
 
 
+import java.awt.geom.Point2D;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,55 +62,22 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 		Map<Double, Shop> shopMap = new TreeMap<>();
 		if(!CollectionUtils.isEmpty(shops)){
 			for(Shop shop : shops){
-				final double distanceInKm = findDistanceInKm(
-							customerLatitude.doubleValue(),
-							customerLongitude.doubleValue(), 
-							shop.getShopLatitude().doubleValue(),
-							shop.getShopLongitude().doubleValue()
-						);
-				shopMap.put(distanceInKm, shop);
+				double distance = Point2D.distance(
+						customerLatitude.doubleValue(), 
+						customerLongitude.doubleValue(), 
+						shop.getShopLatitude().doubleValue(), 
+						shop.getShopLongitude().doubleValue());
+				
+				if(LOG.isTraceEnabled())
+					LOG.trace("distance = "+distance+ " ->> "+shop);
+				
+				shopMap.put(distance, shop);
 			}
 		}
+		if(LOG.isDebugEnabled())
+			LOG.debug(shopMap);
 		shops.clear();
 		shops.addAll(shopMap.values());
 		return shops;
 	}
-	
-	/**
-	 * @param customerLatitude
-	 * @param customerLongitude
-	 * @param shopLatitude
-	 * @param shopLongitude
-	 * @return
-	 */
-	private static double findDistanceInKm(double customerLatitude, double customerLongitude, double shopLatitude, double shopLongitude){
-		double theta = customerLongitude - shopLongitude;
-		
-		double distance = Math.sin(convertDegreeToRadian(customerLatitude)) * Math.sin(convertDegreeToRadian(shopLatitude)) 
-						+ Math.cos(convertDegreeToRadian(customerLatitude)) * Math.cos(convertDegreeToRadian(shopLatitude)) 
-						* Math.cos(convertDegreeToRadian(theta));
-		
-		distance = Math.acos(distance);
-		distance = convertRadianToDegree(distance);
-		distance = distance * 60 * 1.1515;
-		distance = distance * 1.609344; //in KM
-		return distance;
-	}
-	
-	/**
-	 * @param degree
-	 * @return
-	 */
-	private static double convertDegreeToRadian(double degree) {
-		return (degree * Math.PI / 180.0);
-	}
-	
-	/**
-	 * @param radian
-	 * @return
-	 */
-	private static double convertRadianToDegree(double radian) {
-		return (radian * 180 / Math.PI);
-	}
-
 }
