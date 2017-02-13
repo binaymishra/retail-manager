@@ -34,6 +34,10 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 	
 	private Collection<Shop> shops;
 	
+	public RetailsShopServiceImpl(final LinkedList<Shop> shop) {
+		shops = new ConcurrentLinkedQueue<Shop>(shop);
+	}
+	
 	@PostConstruct
 	public void init(){
 		//Thread safe collection from java.util.concurrent api
