@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,6 +81,8 @@ public class ShopController {
 	 */
 	private static boolean validate(final Shop shop){
 		if(Objects.isNull(shop))
+			return true;
+		if(StringUtils.isEmpty(shop.getShopName()))
 			return true;
 		if(Objects.isNull(shop.getShopAddress()))
 			return true;

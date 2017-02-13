@@ -1,70 +1,71 @@
-POST
+How to run ?
+============
 
-URL : http://localhost:3000/shops
+	Step (1)
+	
+		Download/clone project from git and extract the zip as folder.
+		
+		Navigate to the folder and open it in to command prompt.
+		
+		issue command, [Note:gradle must be installed.]
+		
+		c:\retail-manager>gradle build
+		
+		it will create an executable java inside 
+		
+		c:\retail-manager\build\libs\retail-manager-<VERSION>.jar
+		
+		RUN the jar via java command line.
+		
+		c:\retail-manager\build\libs> java -jar retail-manager-<VERSION>.jar
+		
+		
+			OR
+			
+		Download/clone project from git and extract the zip as folder find already built RELASE jar.
+		
+		Navigate to folder release/retail-manager-0.0.1-RELEASE.jar
+		
+		issue command via command prompt c:\retail-manager\release> java -jar retail-manager-0.0.1-RELEASE.jar
+		
+	Step (2)
+	
+		Once the executable is running, Use a RESTfult client to run the end points of the RESTful Service
+		
+		Base URL = http://localhost:3000/retail-manager/v1
+		
+			There are two endpoints :
+			
+				1) /shops 
+				
+						* Operation(Method) POST
+						* Content-Type	application/json;charset=UTF-8
+						* Request Body Should be one shop per request. List of shop is not supported.
+						* Body : 
+									{ 
+										"shopName":"Home Town", 
+											"shopAddress": { 
+												"number":1600, 
+												"postCode":700156 
+												} 
+									}
+		
+				2) /shops?customerLatitude=22.5818985&customerLongitude=88.4529769
+				
+						* Operation(Method) GET
+						* Expected Status code : 200 OK
+						* Response Body(Nearest Shop to customer)
 
-Content-Type	application/json;charset=UTF-8
+	    						{
+	        						"shopName": "Home Town",
+	        							"shopAddress":
+	        								{
+	           								 "number": 1600,
+	            								 "postCode": 700156
+	        								},
+	        							"shopLongitude": 88.4586321,
+	        							"shopLatitude": 22.5829933
+	    						}
 
-{
-  "shopName":"Home Town",
-   "shopAddress":
-         {
-           "number":1600,
-           "postCode":700156
-         }
-}
-
-
-
-URL : http://localhost:3000/shops
-
-Content-Type	application/json;charset=UTF-8
-
-{
-  "shopName":"Axis Mall",
-   "shopAddress":
-         {
-           "number":1600,
-           "postCode":700156
-         }
-}
-
-
-URL : http://localhost:3000/shops
-
-Content-Type	application/json;charset=UTF-8
-
-{
-  "shopName":"Eco Park",
-   "shopAddress":
-         {
-           "number":1600,
-           "postCode":700156
-         }
-}
-
-
-========================================================================================
-
-GET
-
-https://maps.googleapis.com/maps/api/geocode/json?address=New+Town+Bus+Stop,700156&key=AIzaSyAelw4voJokY89NBhPX1NPus5_nQujT-bQ
-
-"location" : {
-               "lat" : 22.5818985,
-               "lng" : 88.4529769
-            }
-
-
-http://localhost:3000/shops?customerLatitude=22.5818985&customerLongitude=88.4529769
-
-
-
-
-[Shop [shopName=Home Town, shopAddress=ShopAddress [number=1600, postCode=700156], shopLongitude=88.4585979, shopLatitude=22.5830465], Shop [shopName=Axis Mall, shopAddress=ShopAddress [number=1600, postCode=700156], shopLongitude=88.45989399999999, shopLatitude=22.5795843], Shop [shopName=Eco Park, shopAddress=ShopAddress [number=1600, postCode=700156], shopLongitude=88.4707215, shopLatitude=22.5959907]]
-
-
-Home Town --> distance from New Town Bus Stop = 0.5910253182937809
-Axis Mall --> distance from New Town Bus Stop = 0.7553294270782349
-Eco Park --> distance from New Town Bus Stop = 2.402834783781203
-
-
+								
+						
