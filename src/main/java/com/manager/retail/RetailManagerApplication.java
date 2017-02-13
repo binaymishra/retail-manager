@@ -7,6 +7,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.google.maps.GeoApiContext;
 
+/**
+ * @author Binay Mishra
+ * 
+ * This class conatins the main() method to bootup application
+ * with the help of an embedded tomcat server
+ */
 @EnableAsync
 @SpringBootApplication
 public class RetailManagerApplication {

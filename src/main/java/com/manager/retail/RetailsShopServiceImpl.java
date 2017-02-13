@@ -52,6 +52,11 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 	@Autowired
 	GoogleMapComponent googleMapComponent;
 
+	/* (non-Javadoc)
+	 * @see com.manager.retail.RetailsShopService#createShop(com.manager.retail.domain.Shop)
+	 * 
+	 * This method creates the shop, in the memory.
+	 */
 	@Override
 	public void createShop(Shop shop) {
 		googleMapComponent.updateLatitudeAndLongitude(shop);
@@ -60,6 +65,10 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 			LOG.info("shop list size = "+shops.size());
 	}
 
+	/* (non-Javadoc)
+	 * @see com.manager.retail.RetailsShopService#findNearestShops(java.math.BigDecimal, java.math.BigDecimal)
+	 *  This method finds the shops nearer to customer location. By comparing customer location with shop location.
+	 */
 	@Override
 	public List<Shop> findNearestShops(BigDecimal customerLongitude, BigDecimal customerLatitude) {
 		final ArrayList<Shop> shops = new ArrayList<>(this.shops);

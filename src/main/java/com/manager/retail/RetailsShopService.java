@@ -8,6 +8,7 @@ import com.manager.retail.domain.Shop;
 public interface RetailsShopService {
 	
 	/**
+	 * This method creates the shop.
 	 * @param shop
 	 */
 	public void createShop(Shop shop);
@@ -15,7 +16,9 @@ public interface RetailsShopService {
 	/**
 	 * @param customerLongitude
 	 * @param customerLatitude
-	 * @return
+	 * @return List<Shop>
+	 * 
+	 * This method finds the shops nearer to customer location.
 	 */
 	public List<Shop> findNearestShops(BigDecimal customerLongitude,  BigDecimal customerLatitude);
 
