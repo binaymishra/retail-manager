@@ -13,6 +13,13 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 import com.manager.retail.domain.Shop;
 
+/**
+ * @author Binay Mishra
+ * 
+ * The role of this component bean class is to find the location [Longitude, Latitude]
+ * of the shop using google geocode api and update the shop location according to it.
+ *
+ */
 @Component("GoogleMapComponent")
 public class GoogleMapComponent {
 	
@@ -24,6 +31,11 @@ public class GoogleMapComponent {
 	@Value("${api.key}")
 	String apiKey;
 
+	/**
+	 * @param shop
+	 * 
+	 * This method updates the location of the shop by fetching the co-ordinates from google geocode service.
+	 */
 	public void updateLatitudeAndLongitude(final Shop shop){
 		geoApiContext.setApiKey(apiKey);
 		String shopAddress = String.format("%s,%s", shop.getShopName(), shop.getShopAddress().getPostCode());

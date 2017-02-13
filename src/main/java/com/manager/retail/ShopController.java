@@ -18,7 +18,11 @@ import com.manager.retail.domain.Shop;
 
 /**
  * @author Binay Mishra
- *
+ * 
+ * This is a REST controller which is designed to to create resource URI location
+ * and defines to operations one is POST to create resource and second is GET operation 
+ * with parameter to find the nearest shop.
+ * The business logic is served via loosely coupled interface {@link com.manager.retail.RetailsShopService}
  */
 @RestController
 public class ShopController {
@@ -30,7 +34,10 @@ public class ShopController {
 	
 	/**
 	 * @param shop
-	 * @return
+	 * @return ResponseEntity<Void>
+	 * 
+	 * This method is used to create a shop which contains shop name, shop Longitude, shop Latitude and shop address
+	 * the shop.address contains postal code and shop number. The business logic is implemented in {@link com.manager.retail.RetailsShopServiceImpl#createShop()}
 	 */
 	@PostMapping("/shops")
 	public ResponseEntity<Void> addShop(@RequestBody Shop shop){
@@ -45,7 +52,10 @@ public class ShopController {
 	/**
 	 * @param customerLongitude
 	 * @param customerLatitude
-	 * @return
+	 * @return ResponseEntity<Shop>
+	 * 
+	 * This method is used to find the shop nearest to the customer location[Longitude, Latitude] by comparing 
+	 * customer location with shop locations. The business logic is implemented in {@link com.manager.retail.RetailsShopServiceImpl#findNearestShops()}
 	 */
 	@GetMapping("/shops")
 	public ResponseEntity<Shop> findNearestShop(
@@ -65,7 +75,8 @@ public class ShopController {
 
 	/**
 	 * @param shop
-	 * @return
+	 * @return boolean
+	 * This method is used to validate input.
 	 */
 	private static boolean validate(final Shop shop){
 		if(Objects.isNull(shop))
