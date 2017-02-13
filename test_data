@@ -1,0 +1,24 @@
+POST
+
+Content-Type	application/json;charset=UTF-8
+
+
+
+http://localhost:3000/retail-manager/v1/shops
+
+{ "shopName":"Home Town", "shopAddress": { "number":1600, "postCode":700156 } }
+
+
+http://localhost:3000/retail-manager/v1/shops
+
+{ "shopName":"Axis Mall", "shopAddress": { "number":1700, "postCode":700156 } }
+
+
+http://localhost:3000/retail-manager/v1/shops
+
+{ "shopName":"Eco Park", "shopAddress": { "number":1800, "postCode":700156 } }
+
+
+GET
+
+http://localhost:3000/retail-manager/v1/shops?customerLatitude=22.5818985&customerLongitude=88.4529769
