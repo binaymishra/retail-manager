@@ -34,6 +34,10 @@ public class RetailsShopServiceImpl implements RetailsShopService {
 	
 	private Collection<Shop> shops;
 	
+	public RetailsShopServiceImpl() {
+		// Default constructor.
+	}
+	
 	public RetailsShopServiceImpl(final LinkedList<Shop> shop) {
 		shops = new ConcurrentLinkedQueue<Shop>(shop);
 	}
