@@ -3,6 +3,7 @@ package com.manager.retail;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,6 +28,16 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value = HttpMessageNotReadableException.class)  
 	@ResponseStatus(HttpStatus.BAD_REQUEST)  
     public void handleHttpMessageNotReadableException(HttpMessageNotReadableException e){
+		
+	}
+	
+	
+	/**
+	 * @param e
+	 */
+	@ExceptionHandler(value = MissingServletRequestParameterException.class)  
+	@ResponseStatus(HttpStatus.BAD_REQUEST)  
+    public void handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
 		
 	}
 	

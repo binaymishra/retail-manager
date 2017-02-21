@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,6 +37,9 @@ public class ShopControllerIntegrationTests {
     private int port;
 
     private URL base;
+    
+    @Value("${server.contextPath}")
+    private String contextPath;
 
     @Autowired
     private TestRestTemplate template;
@@ -45,7 +49,7 @@ public class ShopControllerIntegrationTests {
 
     @Before
     public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/");
+        this.base = new URL("http://localhost:" + port + "/"+contextPath);
     }
     
     @Test
