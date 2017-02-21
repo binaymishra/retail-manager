@@ -19,14 +19,7 @@ How to run ?
 		
 		c:\retail-manager\build\libs> java -jar retail-manager-<VERSION>.jar
 		
-		
-			OR
-			
-		Download/clone project from git and extract the zip as folder find already built RELASE jar.
-		
-		Navigate to folder release/retail-manager-0.0.1-RELEASE.jar
-		
-		issue command via command prompt c:\retail-manager\release> java -jar retail-manager-0.0.1-RELEASE.jar
+	
 		
 	Step (2)
 	
